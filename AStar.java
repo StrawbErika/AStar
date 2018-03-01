@@ -27,8 +27,10 @@ public class AStar {
 
 // System.out.println("openList initialized");
 // System.out.println("minF found");
+// openList.size()
+int c = 0;
+      while(c<1){ //while openlist has elements
 
-      while(openList.size()>0){ //while openlist has elements
         Path minF = openList.get(0);
 
 //find minF of openList
@@ -40,19 +42,22 @@ public class AStar {
         }
 
         path = minF;
-System.out.println("BEFORE REMOVE openList.size() == "+ openList.size());
+// System.out.println("BEFORE REMOVE openList.size() == "+ openList.size());
         openList.remove(minF);
-System.out.println("AFTER REMOVE openList.size() == "+ openList.size());
+// System.out.println("AFTER REMOVE openList.size() == "+ openList.size());
 
-System.out.println("============================================ \n ");
+// System.out.println("============================================ \n ");
         s = path.states.get(path.states.size()-1);
         list = s.getPossibleActions();
+        // System.out.println(s.toString());
+        // System.out.println(list);
         if(s.isWin()){ //check if last state is winning state
           return path;
         }
         else {
           for (int a=0; a<list.size(); a++){
             Path newPath = path.resultPath(list.get(a));
+            // System.out.println(newPath.getLastState().toString());
             boolean inClosedList = false;
             boolean inOpenList = false;
 
@@ -73,6 +78,7 @@ System.out.println("============================================ \n ");
               if(newPath.getLastState().toString().equals(lastState.toString())){
                 inOpenList = true;
                 duplicate = lastState; //if found u make a duplicate of newState
+                break;
               }
             }
 
@@ -83,9 +89,9 @@ System.out.println("============================================ \n ");
 
           }
         }
-
+        c++;
       }
-      System.out.println("i got out of while loop");
+      // System.out.println("i got out of while loop");
 
       return path;
     }

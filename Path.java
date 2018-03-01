@@ -11,8 +11,15 @@ public class Path {
     }
 
     public Path(Path p){
-      this.states = p.states;
-      this.actions = p.actions;
+      this.states = new ArrayList<State>();
+      for(int i = 0; i<p.states.size(); i++){
+        this.states.add(new State(p.states.get(i)));
+      }
+      this.actions = new ArrayList<String>();
+      for(int i = 0; i<p.actions.size(); i++){
+        this.actions.add(p.actions.get(i));
+      }
+
     }
 
     public int getCost(){
@@ -25,6 +32,9 @@ public class Path {
 
       Path pathTemp = new Path(this);
       pathTemp.states.add(result);
+
+      System.out.println(this.getLastState().toString());
+      System.out.println(pathTemp.getLastState().toString());
 
       return pathTemp;
     }

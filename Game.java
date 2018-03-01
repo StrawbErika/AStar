@@ -195,7 +195,6 @@ public class Game {
             public void actionPerformed(ActionEvent e)
             {
               generateMaze();
-              initializeUI();
               render();
             }
         });
