@@ -66,10 +66,10 @@ System.out.println("============================================ \n ");
             }
 
 //checks if newState in openList
-            Path last = openList.get(openList.size()-1);
-            State lastState = last.getLastState();
             for(int j = 0; j<openList.size(); j++){ //checks if newState in openList
-              if(newPath.getLastState().toString().equals(last.toString())){
+              Path last = openList.get(j);
+              State lastState = last.getLastState();
+              if(newPath.getLastState().toString().equals(lastState.toString())){
                 inOpenList = true;
                 duplicate = lastState; //if found u make a duplicate of newState
               }
