@@ -60,25 +60,24 @@ System.out.println("============================================ \n ");
             for(int b = 0; b<closedList.size(); b++){ //checks if newState in closedList
               if(newPath.getLastState().toString().equals(closedList.get(b).toString())){
                 inClosedList = true;
-                duplicate = newPath.getLastState(); //if found u make a duplicate of newState
+                duplicate = closedList.get(b); //if found u make a duplicate of newState
                 break;
               }
             }
 
 //checks if newState in openList
             Path last = openList.get(openList.size()-1);
+            State lastState = last.getLastState();
             for(int j = 0; j<openList.size(); j++){ //checks if newState in openList
               if(newPath.getLastState().toString().equals(last.toString())){
                 inOpenList = true;
-                duplicate = newPath.getLastState(); //if found u make a duplicate of newState
+                duplicate = lastState; //if found u make a duplicate of newState
               }
             }
 
 
             if((!inClosedList && !inOpenList) || ((inClosedList || inOpenList) && (newPath.getLastState().g < duplicate.g))){
-              if(!openList.contains(newPath)){
-                openList.add(newPath);
-              }
+              openList.add(newPath);
             }
 
           }
