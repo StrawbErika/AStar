@@ -16,7 +16,7 @@ public class Path {
     }
 
     public int getCost(){
-      return this.states.get(this.states.size()).f;
+      return this.states.get(this.states.size()-1).f;
     }
 
 }

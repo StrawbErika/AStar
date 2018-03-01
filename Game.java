@@ -22,7 +22,7 @@ public class Game {
 
     private ArrayList<String> assets;
 
-    private ArrayList<String> solveWinActions;
+    private Path solveWinActions;
     private boolean hasWon = false;
 
     private HashMap<String, ImageIcon> iconMap = new HashMap<String, ImageIcon>();
@@ -48,14 +48,12 @@ public class Game {
       String[][] contents = new String[Game.ROWS][Game.COLS];
       int pI = (int)(Math.random() * 10);
       int pJ = (int)(Math.random() * 10);
-      System.out.println("P at Coordinates: "+ pI + ", "+ pJ);
       int gI = (int)(Math.random() * 10);
       int gJ = (int)(Math.random() * 10);
       if((pI == gI) && (pJ == gJ)){
         gI = (int)(Math.random() * 10);
         gJ = (int)(Math.random() * 10);
       }
-      System.out.println("G at Coordinates: "+ gI + ", "+ gJ);
       String c;
       for (int i = 0; i < Game.ROWS; i++) {
           for (int j = 0; j < Game.COLS; j++) {
@@ -172,10 +170,10 @@ public class Game {
         {
             public void actionPerformed(ActionEvent e)
             {
-              // State tempState= currentState;
+              State tempState= currentState;
               //
               // long startTime = System.currentTimeMillis();
-              // solveWinActions= (DFSAlgo.solve(currentState)).getActionsNeeded();
+              solveWinActions= (AStar.solve(currentState));
               // long endTime = System.currentTimeMillis();
               //
               // // System.out.println("That took "+ (endTime-startTime) + " milliseconds");
@@ -189,11 +187,11 @@ public class Game {
               //   newState = newState.result(newState,solveWinActions.get(i));
               //   solveStates.add(newState);
               // }
-              //
-              // initialState = tempState;
-              // solveFrame();
-              // solveRender();
-              // frame.requestFocus();
+
+              initialState = tempState;
+              solveFrame();
+              solveRender();
+              frame.requestFocus();
             }
         });
 
