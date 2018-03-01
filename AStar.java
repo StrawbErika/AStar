@@ -52,22 +52,30 @@ System.out.println("============================================ \n ");
         else {
           for (int a=0; a<list.size(); a++){
             Path newPath = path.resultPath(list.get(a));
-            boolean inClosedList;
-            boolean inOpenList;
+            boolean inClosedList = false;
+            boolean inOpenList = false;
+
 
 //checks if newState in closedList
-            inClosedList = closedList.contains(newPath.getLastState());
-            if(inClosedList){
-              duplicate = newPath.getLastState();
+            for(int b = 0; b<closedList.size(); b++){ //checks if newState in closedList
+              if(newPath.getLastState().toString().equals(closedList.get(b).toString())){
+                inClosedList = true;
+                duplicate = newPath.getLastState(); //if found u make a duplicate of newState
+                break;
+              }
             }
 
 //checks if newState in openList
-            inOpenList = openList.contains(newPath);
-            if(inClosedList){
-              duplicate = newPath.getLastState();
+            Path last = openList.get(openList.size()-1);
+            for(int j = 0; j<openList.size(); j++){ //checks if newState in openList
+              if(newPath.getLastState().toString().equals(last.toString())){
+                inOpenList = true;
+                duplicate = newPath.getLastState(); //if found u make a duplicate of newState
+              }
             }
 
-            if((!inClosedList || !inOpenList) || ((inClosedList || inOpenList) && (newPath.getLastState().g < duplicate.g))){
+
+            if((!inClosedList && !inOpenList) || ((inClosedList || inOpenList) && (newPath.getLastState().g < duplicate.g))){
               if(!openList.contains(newPath)){
                 openList.add(newPath);
               }
