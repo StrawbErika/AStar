@@ -171,15 +171,7 @@ public class Game {
             public void actionPerformed(ActionEvent e)
             {
               State tempState= currentState;
-              //
-              // long startTime = System.currentTimeMillis();
               solveWinActions= (AStar.solve(currentState));
-              // long endTime = System.currentTimeMillis();
-              //
-              // // System.out.println("That took "+ (endTime-startTime) + " milliseconds");
-              // // System.out.println("WITHOUT EXPLORED");
-              // // System.out.println("WITH EXPLORED");
-              //
               //
               // solveStates = new ArrayList<State>();
               // State newState = new State(currentState);
@@ -195,6 +187,18 @@ public class Game {
             }
         });
 
+        JButton button2 = new JButton("R");
+        button2.setPreferredSize(new Dimension(64, 64)); //tile size
+        panel.add(button2);
+        button2.addActionListener( new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+              generateMaze();
+              initializeUI();
+              render();
+            }
+        });
 
         int WIFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
 
