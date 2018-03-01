@@ -46,6 +46,7 @@ System.out.println("AFTER REMOVE openList.size() == "+ openList.size());
 
 System.out.println("============================================ \n ");
         s = path.states.get(path.states.size()-1);
+        list = s.getPossibleActions();
         if(s.isWin()){ //check if last state is winning state
           return path;
         }
