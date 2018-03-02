@@ -2,8 +2,8 @@ import java.util.*;
 
 
 public class Path {
-    public static ArrayList<String> actions;
-    public static ArrayList<State> states;
+    public ArrayList<String> actions;
+    public ArrayList<State> states;
 
     public Path(){
       this.states = new ArrayList<State>();
@@ -21,7 +21,6 @@ public class Path {
       }
 
     }
-
     public int getCost(){
       return this.states.get(this.states.size()-1).f;
     }
@@ -32,9 +31,8 @@ public class Path {
 
       Path pathTemp = new Path(this);
       pathTemp.states.add(result);
+      pathTemp.actions.add(action);
 
-      System.out.println(this.getLastState().toString());
-      System.out.println(pathTemp.getLastState().toString());
 
       return pathTemp;
     }

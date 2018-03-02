@@ -22,14 +22,11 @@ public class AStar {
         State state = new State(initialState, list.get(i)); //state is the state when the action from list is done
         Path open = new Path();
         open.states.add(state);
+        open.actions.add(list.get(i));
         openList.add(open);
       }
 
-// System.out.println("openList initialized");
-// System.out.println("minF found");
-// openList.size()
-int c = 0;
-      while(c<1){ //while openlist has elements
+      while(openList.size() > 0){ //while openlist has elements
 
         Path minF = openList.get(0);
 
@@ -42,22 +39,15 @@ int c = 0;
         }
 
         path = minF;
-// System.out.println("BEFORE REMOVE openList.size() == "+ openList.size());
         openList.remove(minF);
-// System.out.println("AFTER REMOVE openList.size() == "+ openList.size());
-
-// System.out.println("============================================ \n ");
         s = path.states.get(path.states.size()-1);
         list = s.getPossibleActions();
-        // System.out.println(s.toString());
-        // System.out.println(list);
         if(s.isWin()){ //check if last state is winning state
           return path;
         }
         else {
           for (int a=0; a<list.size(); a++){
             Path newPath = path.resultPath(list.get(a));
-            // System.out.println(newPath.getLastState().toString());
             boolean inClosedList = false;
             boolean inOpenList = false;
 
@@ -89,9 +79,7 @@ int c = 0;
 
           }
         }
-        c++;
       }
-      // System.out.println("i got out of while loop");
 
       return path;
     }
