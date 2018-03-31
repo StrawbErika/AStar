@@ -9,73 +9,78 @@ public class AStar {
     public static State duplicate;
     public static State s;
 
-    public static Path AStar(State initialState){
+    public static Path solve(State initialState){
       openList = new ArrayList<Path>();
-      closedList = new ArrayList<State>(); //HashMap
+      closedList = new ArrayList<State>();
       path = new Path();
       Path pathTemp = new Path(path);
+
       list = new ArrayList<String>(initialState.getPossibleActions());
 
+//fill up initialState chuchu openlist
       for (int i=0; i!=list.size(); i++){
-        State state = new State(initialState, list.get(i));
+        State state = new State(initialState, list.get(i)); //state is the state when the action from list is done
         Path open = new Path();
         open.states.add(state);
+        open.actions.add(list.get(i));
         openList.add(open);
       }
 
-      State currentState = null;
-      Path minF = openList.get(0);
+      while(openList.size() > 0){ //while openlist has elements
 
-      for(int j = 1; j!=openList.size(); j++){
-        Path temp = openList.get(j);
-        if(temp.getCost() < minF.getCost()){
-          minF = temp;
+        Path minF = openList.get(0);
+
+//find minF of openList
+        for(int j = 1; j!=openList.size(); j++){
+          Path temp = openList.get(j);
+          if(temp.getCost() < minF.getCost()){
+            minF = temp;
+          }
         }
-      }
 
-      while(openList.size()>0){
         path = minF;
-        openList.remove(minF); //lol
+        openList.remove(minF);
         s = path.states.get(path.states.size()-1);
-        closedList.add(s);
-        if(currentState.isWin()){
+        list = s.getPossibleActions();
+        if(s.isWin()){ //check if last state is winning state
           return path;
         }
         else {
-          for (int a=0; a!=list.size(); a++){
-            State newState = currentState.result(currentState, list.get(a));
+          for (int a=0; a<list.size(); a++){
+            Path newPath = path.resultPath(list.get(a));
             boolean inClosedList = false;
             boolean inOpenList = false;
 
-            for(int b = 0; b!=closedList.size(); b++){
-              if(newState.toString().equals(closedList.get(b).toString())){
+
+//checks if newState in closedList
+            for(int b = 0; b<closedList.size(); b++){ //checks if newState in closedList
+              if(newPath.getLastState().toString().equals(closedList.get(b).toString())){
                 inClosedList = true;
-                duplicate = closedList.get(b);
+                duplicate = closedList.get(b); //if found u make a duplicate of newState
                 break;
               }
             }
 
-            for(int j = 0; j!=openList.size(); j++){
-              Path temp = openList.get(j);
-              for(int i = 0; i!=temp.states.size(); i++){
-                if(newState.toString().equals(openList.get(j).toString())){
-                  inOpenList = true;
-                  duplicate = closedList.get(i);
-                  break;
-                }
+//checks if newState in openList
+            for(int j = 0; j<openList.size(); j++){ //checks if newState in openList
+              Path last = openList.get(j);
+              State lastState = last.getLastState();
+              if(newPath.getLastState().toString().equals(lastState.toString())){
+                inOpenList = true;
+                duplicate = lastState; //if found u make a duplicate of newState
+                break;
               }
             }
 
 
-            if((!inClosedList || !inOpenList) || ((inClosedList || inClosedList) && (newState.g < duplicate.g))){
-              pathTemp.states.add(newState);
-              openList.add(pathTemp);
+            if((!inClosedList && !inOpenList) || ((inClosedList || inOpenList) && (newPath.getLastState().g < duplicate.g))){
+              openList.add(newPath);
             }
 
           }
         }
-
       }
+
       return path;
     }
 }

@@ -132,10 +132,6 @@ public class State {
           }
         }
         double h = getH();
-        ArrayList<String> act = this.getPossibleActions();
-        for(int i = 0; i < act.size(); i++){
-          System.out.println(act.get(i));
-        }
         g++;
         int h2 = (int) h;
         f = g + h2;
@@ -191,7 +187,7 @@ public class State {
         }
       }
       else{
-        return true;
+        return false;
       }
     }
 

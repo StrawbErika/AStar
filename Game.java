@@ -7,8 +7,8 @@ import java.util.*;
 import javax.imageio.*;
 
 public class Game {
-    public static final int ROWS = 10;
-    public static final int COLS = 10;
+    public static int ROWS;
+    public static int COLS;
 
     private JFrame frame;
     private JFrame solve;
@@ -22,7 +22,7 @@ public class Game {
 
     private ArrayList<String> assets;
 
-    private ArrayList<String> solveWinActions;
+    private Path solveWinActions;
     private boolean hasWon = false;
 
     private HashMap<String, ImageIcon> iconMap = new HashMap<String, ImageIcon>();
@@ -30,6 +30,11 @@ public class Game {
     private String direction;
 
     public Game() {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Please enter a number");
+        ROWS = scan.nextInt();
+        COLS = ROWS;
+
         this.assets = new ArrayList<String>();
         this.setAssets();
         this.direction = "Front";
@@ -46,16 +51,14 @@ public class Game {
 
     public void generateMaze(){
       String[][] contents = new String[Game.ROWS][Game.COLS];
-      int pI = (int)(Math.random() * 10);
-      int pJ = (int)(Math.random() * 10);
-      System.out.println("P at Coordinates: "+ pI + ", "+ pJ);
-      int gI = (int)(Math.random() * 10);
-      int gJ = (int)(Math.random() * 10);
+      int pI = (int)(Math.random() * ROWS);
+      int pJ = (int)(Math.random() * ROWS);
+      int gI = (int)(Math.random() * ROWS);
+      int gJ = (int)(Math.random() * ROWS);
       if((pI == gI) && (pJ == gJ)){
-        gI = (int)(Math.random() * 10);
-        gJ = (int)(Math.random() * 10);
+        gI = (int)(Math.random() * ROWS);
+        gJ = (int)(Math.random() * ROWS);
       }
-      System.out.println("G at Coordinates: "+ gI + ", "+ gJ);
       String c;
       for (int i = 0; i < Game.ROWS; i++) {
           for (int j = 0; j < Game.COLS; j++) {
@@ -149,7 +152,7 @@ public class Game {
         buttons = new JButton[Game.ROWS][Game.COLS];
 
         Container pane = frame.getContentPane();
-        JPanel panel = new JPanel(new GridLayout(11, 10));
+        JPanel panel = new JPanel(new GridLayout(ROWS+1, COLS));
         pane.add(panel);
 
         // initialize all grid buttons
@@ -172,31 +175,33 @@ public class Game {
         {
             public void actionPerformed(ActionEvent e)
             {
-              // State tempState= currentState;
-              //
-              // long startTime = System.currentTimeMillis();
-              // solveWinActions= (DFSAlgo.solve(currentState)).getActionsNeeded();
-              // long endTime = System.currentTimeMillis();
-              //
-              // // System.out.println("That took "+ (endTime-startTime) + " milliseconds");
-              // // System.out.println("WITHOUT EXPLORED");
-              // // System.out.println("WITH EXPLORED");
-              //
-              //
-              // solveStates = new ArrayList<State>();
-              // State newState = new State(currentState);
-              // for(int i = 0; i!=solveWinActions.size(); i++){
-              //   newState = newState.result(newState,solveWinActions.get(i));
-              //   solveStates.add(newState);
-              // }
-              //
-              // initialState = tempState;
-              // solveFrame();
-              // solveRender();
-              // frame.requestFocus();
+              State tempState= currentState;
+              solveStates= new ArrayList<State>();
+              solveWinActions= (AStar.solve(currentState));
+
+              saveFile();
+              for(int i = 0; i<solveWinActions.states.size(); i++){
+                solveStates.add(solveWinActions.states.get(i));
+              }
+
+              initialState = tempState;
+              solveFrame();
+              solveRender();
+              frame.requestFocus();
             }
         });
 
+        JButton button2 = new JButton("R");
+        button2.setPreferredSize(new Dimension(64, 64)); //tile size
+        panel.add(button2);
+        button2.addActionListener( new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+              generateMaze();
+              render();
+            }
+        });
 
         int WIFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
 
@@ -256,7 +261,7 @@ public class Game {
 
       Container pane = solve.getContentPane();
 
-      pane.setLayout(new GridLayout(11, 10));
+      pane.setLayout(new GridLayout(ROWS+1, COLS));
 
       for (int i = 0; i < Game.ROWS; i++) {
           for (int j = 0; j < Game.COLS; j++) {
@@ -276,14 +281,14 @@ public class Game {
       {
           public void actionPerformed(ActionEvent e)
           {
-            // if(action>0){
-            //   action--;
-            //   initialState= solveStates.get(action);
-            //   solveRender();
-            // }
-            // else{
-            //   solveRender();
-            // }
+            if(action>0){
+              action--;
+              initialState= solveStates.get(action);
+              solveRender();
+            }
+            else{
+              solveRender();
+            }
           }
       });
 
@@ -294,15 +299,14 @@ public class Game {
       {
           public void actionPerformed(ActionEvent e)
           {
-            // System.out.println(action);
-            // if(action<solveWinActions.size()){
-            //   initialState= solveStates.get(action);
-            //   action++;
-            //   solveRender();
-            // }
-            // else{
-            //   solveRender();
-            // }
+            if(action<solveWinActions.states.size()){
+              initialState= solveStates.get(action);
+              action++;
+              solveRender();
+            }
+            else{
+              solveRender();
+            }
           }
       });
 
@@ -313,7 +317,6 @@ public class Game {
     }
 
     public void solveRender() {
-        // update values of buttons from currentState
         for (int i = 0; i < Game.ROWS; i++) {
             for (int j = 0; j < Game.COLS; j++) {
                 String currentValue = this.initialState.getValue(i, j);
@@ -333,7 +336,6 @@ public class Game {
     }
 
     public void render() {
-        // update values of buttons from currentState
         for (int i = 0; i < Game.ROWS; i++) {
             for (int j = 0; j < Game.COLS; j++) {
                 String currentValue = this.currentState.getValue(i, j);
@@ -353,13 +355,14 @@ public class Game {
     }
 
     public void saveFile() {
-        // save currentState to puzzle.in
-        String filename = "puzzle.in";
+        String filename = "maze.out";
 
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
 
-            writer.write(currentState.toString());
+            for(int i=0; i<solveWinActions.actions.size(); i++){
+              writer.write(solveWinActions.actions.get(i)+" ");
+            }
 
             writer.close();
         }
